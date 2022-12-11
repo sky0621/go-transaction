@@ -1,26 +1,16 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
-	"gorm.io/driver/sqlite"
-	"gorm.io/gorm"
+	"github.com/sky0621/go-transaction/external/rdb"
+	"github.com/sky0621/go-transaction/external/web"
 )
 
 // MEMO: トランザクションをhandlerレベルで扱うことの検証に関する部分以外は適当に実装。
 func main() {
-	db, err := gorm.Open(sqlite.Open("test.db"), &gorm.Config{})
-	if err != nil {
-		panic(err)
-	}
-
-	r := gin.Default()
-	r.Use(transactionMiddleware())
-
-	r.Run()
+	db := rdb.Setup()
+	web.Setup(db)
 }
 
-func transactionMiddleware(db *gorm.DB) gin.HandlerFunc {
-	return func(ctx *gin.Context) {
-		ctx.Next()
-	}
-}
+// Test
+//   Score
+//   Result

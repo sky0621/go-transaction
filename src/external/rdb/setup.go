@@ -6,7 +6,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func setup() *gorm.DB {
+func Setup() *gorm.DB {
 	db, err := gorm.Open(sqlite.Open("test.db"), &gorm.Config{})
 	if err != nil {
 		panic(err)
