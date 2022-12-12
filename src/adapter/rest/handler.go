@@ -26,6 +26,7 @@ func SaveTest(u usecase.Test) func(c *gin.Context) {
 			Score: 92, Result: "PASS",
 		}
 
+		// MEMO: context.Context に transaction 開始済みの *gorm.DB が隠されている。
 		if err := u.SaveTest(c.Request.Context(), r); err != nil {
 			// MEMO: 適当
 			panic(err)
