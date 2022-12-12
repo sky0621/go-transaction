@@ -21,7 +21,7 @@ func (t test) GetTest(ctx context.Context, id int) (*model.TestModel, error) {
 	var resScore *TestScore
 	db.Model(&TestScore{ID: id}).First(&resScore)
 	var resResult *TestResult
-	db.Model(&TestScore{ID: id}).First(&resResult)
+	db.Model(&TestResult{ID: id}).First(&resResult)
 	return &model.TestModel{
 		Score:  resScore.Score,
 		Result: resResult.Result,
@@ -39,7 +39,9 @@ func (t test) SaveTestScore(ctx context.Context, score int) error {
 }
 
 func (t test) SaveTestResult(ctx context.Context, result string) error {
+	//	return errors.New("ERR")
 	tx := ctx.Value("TX").(*gorm.DB)
+
 	res := tx.Create(&TestResult{
 		ID:     1,
 		Result: result,
