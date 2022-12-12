@@ -3,7 +3,7 @@ package web
 import (
 	"context"
 	"github.com/gin-gonic/gin"
-	"github.com/sky0621/go-transaction/adapter/rest"
+	"github.com/sky0621/go-transaction/adapter/controller"
 	"github.com/sky0621/go-transaction/usecase"
 	"gorm.io/gorm"
 	"net/http"
@@ -15,8 +15,8 @@ func Setup(db *gorm.DB, uTest usecase.Test) {
 	// POSTだけに適用する方法って、あるんだっけ？
 	r.Use(transactionMiddleware(db))
 
-	r.POST("/test", rest.SaveTest(uTest))
-	r.GET("/test", rest.ListTest(uTest))
+	r.POST("/test", controller.SaveTestFunc(uTest))
+	r.GET("/test", controller.ListTestFunc(uTest))
 
 	r.Run()
 }

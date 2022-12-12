@@ -1,13 +1,13 @@
-package rest
+package controller
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/sky0621/go-transaction/domain"
+	"github.com/sky0621/go-transaction/domain/model"
 	"github.com/sky0621/go-transaction/usecase"
 	"net/http"
 )
 
-func ListTest(u usecase.Test) func(c *gin.Context) {
+func ListTestFunc(u usecase.Test) func(c *gin.Context) {
 	return func(c *gin.Context) {
 		results, err := u.ListTest(c.Request.Context())
 		if err != nil {
@@ -19,10 +19,10 @@ func ListTest(u usecase.Test) func(c *gin.Context) {
 	}
 }
 
-func SaveTest(u usecase.Test) func(c *gin.Context) {
+func SaveTestFunc(u usecase.Test) func(c *gin.Context) {
 	return func(c *gin.Context) {
 		// MEMO: 本来はリクエストボディの中身をパースする。
-		r := &domain.TestModel{
+		r := &model.TestModel{
 			Score: 92, Result: "PASS",
 		}
 
