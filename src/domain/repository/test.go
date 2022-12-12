@@ -6,7 +6,7 @@ import (
 )
 
 type Test interface {
-	ListTest(ctx context.Context) ([]*model.TestModel, error)
+	GetTest(ctx context.Context, id int) (*model.TestModel, error)
 	SaveTestScore(ctx context.Context, score int) error
 	SaveTestResult(ctx context.Context, result string) error
 }

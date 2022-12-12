@@ -1,7 +1,6 @@
 package web
 
 import (
-	"context"
 	"github.com/gin-gonic/gin"
 	"github.com/sky0621/go-transaction/adapter/controller"
 	"github.com/sky0621/go-transaction/usecase"
@@ -30,11 +29,12 @@ func transactionMiddleware(db *gorm.DB) gin.HandlerFunc {
 			defer func() {
 				if r := recover(); r != nil {
 					tx.Rollback()
+
+					ctx.JSON(http.StatusInternalServerError, r)
 				}
 			}()
 
-			// MEMO: gin.Context への set は結局 context.Context への再変換が必要になるので使わない。
-			context.WithValue(context.Background(), "TX", tx)
+			ctx.Set("TX", tx)
 
 			ctx.Next()
 
@@ -43,8 +43,7 @@ func transactionMiddleware(db *gorm.DB) gin.HandlerFunc {
 			return
 		}
 
-		// MEMO: gin.Context への set は結局 context.Context への再変換が必要になるので使わない。
-		context.WithValue(context.Background(), "DB", db)
+		ctx.Set("DB", db)
 
 		ctx.Next()
 	}

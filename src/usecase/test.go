@@ -7,7 +7,7 @@ import (
 )
 
 type Test interface {
-	ListTest(ctx context.Context) ([]*model.TestModel, error)
+	GetTest(ctx context.Context, id int) (*model.TestModel, error)
 	SaveTest(ctx context.Context, r *model.TestModel) error
 }
 
@@ -19,8 +19,8 @@ type test struct {
 	d domain.Test
 }
 
-func (t test) ListTest(ctx context.Context) ([]*model.TestModel, error) {
-	return t.d.ListTest(ctx)
+func (t test) GetTest(ctx context.Context, id int) (*model.TestModel, error) {
+	return t.d.GetTest(ctx, id)
 }
 
 func (t test) SaveTest(ctx context.Context, r *model.TestModel) error {

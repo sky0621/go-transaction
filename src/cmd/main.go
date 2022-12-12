@@ -12,6 +12,10 @@ import (
 func main() {
 	db := rdb.Setup()
 
+	// MEMO: migration 用
+	//	db.AutoMigrate(&gateway.TestScore{})
+	//	db.AutoMigrate(&gateway.TestResult{})
+
 	// MEMO: 本来なら wire に任せる。
 	gTest := gateway.NewTest()
 	dTestResult := domain.NewTest(gTest)

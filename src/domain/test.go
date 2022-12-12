@@ -7,7 +7,7 @@ import (
 )
 
 type Test interface {
-	ListTest(ctx context.Context) ([]*model.TestModel, error)
+	GetTest(ctx context.Context, id int) (*model.TestModel, error)
 	SaveTestScore(ctx context.Context, score int) error
 	SaveTestResult(ctx context.Context, result string) error
 }
@@ -20,8 +20,8 @@ type test struct {
 	repo repository.Test
 }
 
-func (t test) ListTest(ctx context.Context) ([]*model.TestModel, error) {
-	return t.repo.ListTest(ctx)
+func (t test) GetTest(ctx context.Context, id int) (*model.TestModel, error) {
+	return t.repo.GetTest(ctx, id)
 }
 
 func (t test) SaveTestScore(ctx context.Context, score int) error {
