@@ -1,21 +1,21 @@
 package web
 
 import (
+	"context"
 	"github.com/gin-gonic/gin"
+	"github.com/sky0621/go-transaction/adapter/rest"
+	"github.com/sky0621/go-transaction/usecase"
 	"gorm.io/gorm"
-	"net/http"
 )
 
-func Setup(db *gorm.DB) {
+func Setup(db *gorm.DB, uTest usecase.Test) {
 	r := gin.Default()
+
+	// POSTだけに適用する方法って、あるんだっけ？
 	r.Use(transactionMiddleware(db))
 
-	r.POST("/test", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{"": ""})
-	})
-	r.GET("/test", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{"message": "Hello!"})
-	})
+	r.POST("/test", rest.SaveTest(uTest))
+	r.GET("/test", rest.ListTest(uTest))
 
 	r.Run()
 }
@@ -23,7 +23,17 @@ func Setup(db *gorm.DB) {
 func transactionMiddleware(db *gorm.DB) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		tx := db.Begin()
-		ctx.Set("TX", tx)
+		defer func() {
+			if r := recover(); r != nil {
+				tx.Rollback()
+			}
+		}()
+
+		// MEMO: gin.Context への set は結局 context.Context への再変換が必要になるので使わない。
+		context.WithValue(context.Background(), "TX", tx)
+
 		ctx.Next()
+
+		tx.Commit()
 	}
 }
